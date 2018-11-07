@@ -42,13 +42,21 @@ public class ExtendedLink extends Link {
 
 	public ExtendedLink withSearchableData() {
 		this.initFieldsForSearch();
-		this.search = new Search().initParam().initSort().initPagination().initOperators().initFullExample();
+		this.search = this.search == null ? new Search() : this.search;
+		this.search = this.search.initParam().initSort().initPagination().initOperators().initFullExample();
 		return this;
 	}
 
 	public ExtendedLink withPageableData() {
 		this.initFieldsForSearch();
-		this.search = new Search().initSort().initPagination().initPageableExample();
+		this.search = this.search == null ? new Search() : this.search;
+		this.search = this.search.initSort().initPagination().initPageableExample();
+		return this;
+	}
+
+	public ExtendedLink withProxyProperty(String responseName, String searchName) {
+		this.search = this.search == null ? new Search() : this.search;
+		this.search.addProxyProperty(responseName, searchName);
 		return this;
 	}
 
@@ -71,10 +79,11 @@ public class ExtendedLink extends Link {
 		private String sort;
 		private String pagination;
 		private Map<String, String> operators;
+		private Map<String, String> proxyProperties = new LinkedHashMap<>();
 		private String example;
 
 		public Search initParam() {
-			this.param = "search={resourceProperty | resourceProperty.parentProperty}{operators}{value}{Logical AND | Logical OR}";
+			this.param = "search={resourceProperty | resourceProperty.parentProperty}{operators}{value | _null_}{Logical AND | Logical OR}";
 			return this;
 		}
 
@@ -112,6 +121,11 @@ public class ExtendedLink extends Link {
 
 		public Search initPageableExample() {
 			this.example = "...endpoint?page=0&size=10&sort=prop5,asc&sort=prop6,desc";
+			return this;
+		}
+
+		public Search addProxyProperty(String responseName, String searchName) {
+			this.proxyProperties.put(responseName, searchName);
 			return this;
 		}
 

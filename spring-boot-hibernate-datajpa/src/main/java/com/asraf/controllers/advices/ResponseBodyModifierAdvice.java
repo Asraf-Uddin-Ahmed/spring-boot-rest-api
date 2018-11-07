@@ -29,7 +29,6 @@ public class ResponseBodyModifierAdvice implements ResponseBodyAdvice<Object> {
 			ServerHttpResponse response) {
 
 		String fields = ((ServletServerHttpRequest) request).getServletRequest().getParameter("fields");
-		System.out.println(fields);
 		System.out.println(body);
 		// response.getHeaders().add("dummy-header", "dummy-value");
 		if (StringUtils.isNullOrWhitespace(fields)) {
