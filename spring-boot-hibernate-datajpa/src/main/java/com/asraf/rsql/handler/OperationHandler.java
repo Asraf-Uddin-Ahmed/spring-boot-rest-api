@@ -29,7 +29,7 @@ public abstract class OperationHandler<T> {
 		this.builder = builder;
 
 		this.arguments = castArguments(root, strArguments);
-		this.argument = strArguments.get(0);
+		this.argument = arguments.get(0);
 	}
 
 	public void setSuccessor(OperationHandler<T> successor) {
