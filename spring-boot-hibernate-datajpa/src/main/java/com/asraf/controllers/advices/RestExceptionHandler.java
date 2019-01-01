@@ -27,6 +27,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.asraf.dtos.mapper.errors.ApiErrorMapper;
 import com.asraf.dtos.response.errors.ApiErrorResponseDto;
+import com.asraf.exceptions.DuplicateResourceFoundException;
+import com.asraf.exceptions.ParentDeletionException;
+import com.asraf.exceptions.RequestResourceMismatchException;
+import com.asraf.exceptions.ResourceListNotFoundException;
 import com.asraf.exceptions.ResourceNotFoundException;
 import com.asraf.utils.EnumUtils;
 
@@ -167,6 +171,27 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return buildResponseEntity(apiError);
 	}
 
+	@ExceptionHandler(ParentDeletionException.class)
+	protected ResponseEntity<Object> handleParentDeletionException(ParentDeletionException ex) {
+		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.BAD_REQUEST)
+				.setMessage(ex.getMessage()).build();
+		return buildResponseEntity(apiError);
+	}
+
+	@ExceptionHandler(ResourceListNotFoundException.class)
+	protected ResponseEntity<Object> handleResourceListNotFoundException(ResourceListNotFoundException ex) {
+		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.NOT_FOUND)
+				.setMessage(ex.getMessage()).build();
+		return buildResponseEntity(apiError);
+	}
+
+	@ExceptionHandler({DuplicateResourceFoundException.class, RequestResourceMismatchException.class})
+	protected ResponseEntity<Object> handleConflictTypedException(RuntimeException ex) {
+		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.CONFLICT)
+				.setMessage(ex.getMessage()).build();
+		return buildResponseEntity(apiError);
+	}
+	
 	@ExceptionHandler(value = { Exception.class })
 	protected ResponseEntity<Object> handleException(RuntimeException ex, WebRequest request) {
 		log.error(ex);
