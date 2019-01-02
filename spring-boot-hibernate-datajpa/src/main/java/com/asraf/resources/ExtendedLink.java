@@ -111,6 +111,7 @@ public class ExtendedLink extends Link {
 			this.operators.put("Not in", "=out=");
 			this.operators.put("Parent access operator", ".");
 			this.operators.put("Like operator", "*");
+			this.operators.put("String enclosing operator", " ' | \" ");
 			return this;
 		}
 
