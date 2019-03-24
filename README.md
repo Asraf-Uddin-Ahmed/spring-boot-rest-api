@@ -30,4 +30,4 @@ java -jar target/spring-boot-hibernate-datajpa.jar --spring.profiles.active=prod
 4. [RSQL parser](https://github.com/jirutka/rsql-parser)
 5. [Querydsl join](https://stackoverflow.com/questions/47661028/querydsl-how-to-write-a-complex-query?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa) 
 6. [To generate Querydsl code](https://stackoverflow.com/questions/24482259/eclipse-issue-with-maven-build-and-jdk-when-generating-qclasses-in-querydsl) 
-7. [Profile based development] (https://www.youtube.com/watch?v=0zjQX7WwjrI&feature=youtu.be&list=PLGDwUiT1wr6-Fn3N2oqJpTdhGjFHnIIKY)
+7. [Profile based development](https://www.youtube.com/watch?v=0zjQX7WwjrI&feature=youtu.be&list=PLGDwUiT1wr6-Fn3N2oqJpTdhGjFHnIIKY)
