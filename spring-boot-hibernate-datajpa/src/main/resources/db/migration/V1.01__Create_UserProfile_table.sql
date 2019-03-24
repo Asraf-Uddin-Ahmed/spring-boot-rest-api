@@ -1,4 +1,4 @@
-CREATE TABLE `mytestdb`.`user_profile` (
+CREATE TABLE `user_profile` (
   `id` BIGINT NOT NULL,
   `address` VARCHAR(45) NOT NULL,
   `phone_number` VARCHAR(45) NOT NULL,
