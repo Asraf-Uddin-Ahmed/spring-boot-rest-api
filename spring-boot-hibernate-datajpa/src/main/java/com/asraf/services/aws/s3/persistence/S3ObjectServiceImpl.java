@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +22,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.asraf.properties.AwsProperties;
 import com.asraf.services.aws.s3.S3ObjectService;
 
 @Service
@@ -37,12 +37,11 @@ public class S3ObjectServiceImpl implements S3ObjectService {
 	private final String BUCKET_URL_PREFIX;
 
 	@Autowired
-	public S3ObjectServiceImpl(AmazonS3 s3Client, @Value("${aws.s3.bucket}") String bucketName,
-			@Value("${aws.s3.presigned.expiration}") int defaultExpirationInMinute) {
+	public S3ObjectServiceImpl(AmazonS3 s3Client, AwsProperties awsProperties) {
 		this.s3Client = s3Client;
 
-		DEFAULT_EXPIRATION_IN_MINUTE = defaultExpirationInMinute;
-		BUCKET_NAME = bucketName;
+		DEFAULT_EXPIRATION_IN_MINUTE = awsProperties.getS3().getPresigned().getExpiration();
+		BUCKET_NAME = awsProperties.getS3().getBucket();
 		BUCKET_URL_PREFIX = "https://" + BUCKET_NAME + ".s3.amazonaws.com/";
 	}
 

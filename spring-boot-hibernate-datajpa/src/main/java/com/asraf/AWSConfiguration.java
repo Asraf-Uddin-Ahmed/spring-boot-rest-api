@@ -1,6 +1,6 @@
 package com.asraf;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,18 +9,21 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.asraf.properties.AwsProperties;
 
 @Configuration
 public class AWSConfiguration {
 
-	@Value("${aws.access-key}")
-	private String accessKey;
+	private final String accessKey;
+	private final String secretKey;
+	private final String s3Region;
 
-	@Value("${aws.secret-key}")
-	private String secretKey;
-
-	@Value("${aws.s3.region}")
-	private String s3Region;
+	@Autowired
+	public AWSConfiguration(AwsProperties awsProperties) {
+		this.accessKey = awsProperties.getAccessKey();
+		this.secretKey = awsProperties.getSecretKey();
+		this.s3Region = awsProperties.getS3().getRegion();
+	}
 
 	@Bean
 	public BasicAWSCredentials basicAWSCredentials() {

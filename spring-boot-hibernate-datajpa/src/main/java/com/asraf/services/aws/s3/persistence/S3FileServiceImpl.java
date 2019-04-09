@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -15,15 +14,15 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
+import com.asraf.properties.AwsProperties;
 import com.asraf.services.aws.s3.S3FileService;
 
 @Service
 public class S3FileServiceImpl extends S3ObjectServiceImpl implements S3FileService {
 
 	@Autowired
-	public S3FileServiceImpl(AmazonS3 s3Client, @Value("${aws.s3.bucket}") String bucketName,
-			@Value("${aws.s3.presigned.expiration}") int defaultExpirationInMinute) {
-		super(s3Client, bucketName, defaultExpirationInMinute);
+	public S3FileServiceImpl(AmazonS3 s3Client, AwsProperties awsProperties) {
+		super(s3Client, awsProperties);
 	}
 
 	public PutObjectResult put(String key, File file) {
