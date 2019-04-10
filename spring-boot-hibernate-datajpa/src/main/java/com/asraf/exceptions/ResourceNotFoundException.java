@@ -6,6 +6,8 @@ import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.asraf.constants.ErrorCode;
+
 public class ResourceNotFoundException extends RuntimeException {
 
 	/**
@@ -24,7 +26,7 @@ public class ResourceNotFoundException extends RuntimeException {
 
 	private static <K, V> Map<K, V> toMap(Class<K> keyType, Class<V> valueType, String... entries) {
 		if (entries.length % 2 == 1)
-			throw new IllegalArgumentException("Invalid entries");
+			throw new IllegalArgumentException(ErrorCode.Exception.Resource.NotFound.Invalid.ENTRIES);
 		return IntStream.range(0, entries.length / 2).map(i -> i * 2).collect(HashMap::new,
 				(m, i) -> m.put(keyType.cast(entries[i]), valueType.cast(entries[i + 1])), Map::putAll);
 	}

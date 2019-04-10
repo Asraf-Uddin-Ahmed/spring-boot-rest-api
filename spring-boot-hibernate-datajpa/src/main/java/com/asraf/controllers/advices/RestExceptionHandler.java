@@ -1,5 +1,6 @@
 package com.asraf.controllers.advices;
 
+import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;
 
 import javax.persistence.EntityExistsException;
@@ -25,6 +26,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.asraf.constants.ErrorCode;
 import com.asraf.dtos.mapper.errors.ApiErrorMapper;
 import com.asraf.dtos.response.errors.ApiErrorResponseDto;
 import com.asraf.exceptions.DuplicateResourceFoundException;
@@ -34,11 +36,11 @@ import com.asraf.exceptions.ResourceListNotFoundException;
 import com.asraf.exceptions.ResourceNotFoundException;
 import com.asraf.utils.EnumUtils;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-@Log4j
+@Slf4j
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private final ApiErrorMapper apiErrorMapper;
@@ -51,25 +53,26 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	@Override
 	protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		String error = ex.getParameterName() + " parameter is missing";
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		return buildResponseEntity(this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.BAD_REQUEST)
-				.setDebugMessage(ex).setMessage(error).build());
+				.setMessageByErrorCode(ErrorCode.HttpError.MissingServletRequestParameter, ex.getParameterName())
+				.setDebugMessage(ex).build());
 	}
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(ex.getContentType());
-		builder.append(" media type is not supported. Supported media types are ");
-		ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(", "));
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		return buildResponseEntity(this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-				.setDebugMessage(ex).setMessage(builder.substring(0, builder.length() - 2)).build());
+				.setMessageByErrorCode(ErrorCode.HttpError.MissingServletRequestParameter, ex.getContentType(),
+						ex.getSupportedMediaTypes().toString())
+				.setDebugMessage(ex).build());
 	}
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().initDefaultValidationError()
 				.addValidationFieldErrors(ex.getBindingResult().getFieldErrors())
 				.addValidationObjectErrors(ex.getBindingResult().getGlobalErrors()).build();
@@ -82,17 +85,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		ServletWebRequest servletWebRequest = (ServletWebRequest) request;
 		log.info(String.format("%s to %s", servletWebRequest.getHttpMethod().toString(),
 				servletWebRequest.getRequest().getServletPath().toString()));
-		String error = "Malformed JSON request";
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		return buildResponseEntity(this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.BAD_REQUEST)
-				.setDebugMessage(ex).setMessage(error).build());
+				.setDebugMessage(ex).setMessageByErrorCode(ErrorCode.HttpError.Message.NOT_READABLE).build());
 	}
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		String error = "Error writing JSON output";
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		return buildResponseEntity(this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-				.setDebugMessage(ex).setMessage(error).build());
+				.setDebugMessage(ex).setMessageByErrorCode(ErrorCode.HttpError.Message.NOT_WRITABLE).build());
 	}
 
 	/*
@@ -101,102 +104,136 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(javax.validation.ConstraintViolationException.class)
 	protected ResponseEntity<Object> handleConstraintViolation(javax.validation.ConstraintViolationException ex) {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().initDefaultValidationError()
 				.addValidationErrors(ex.getConstraintViolations()).build();
 		return buildResponseEntity(apiError);
 	}
 
+//	@ExceptionHandler(MessagingException.class)
+//	protected ResponseEntity<Object> handleMessagingException(MessagingException ex) {
+//		log.error(ex.getClass().getSimpleName() + " - ", ex);
+//		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//				.setMessageByErrorCode(ErrorCode.Exception.Messaging.VALUE).setDebugMessage(ex).build();
+//		return buildResponseEntity(apiError);
+//	}
+
+	@ExceptionHandler(DuplicateResourceFoundException.class)
+	protected ResponseEntity<Object> handleDuplicateResourceFoundException(DuplicateResourceFoundException ex) {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
+		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.CONFLICT)
+				.setMessageByErrorCode(ErrorCode.Exception.Resource.DuplicateFound.VALUE).setDebugMessage(ex).build();
+		return buildResponseEntity(apiError);
+	}
+
 	@ExceptionHandler(ResourceNotFoundException.class)
 	protected ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.NOT_FOUND)
-				.setMessage(ex.getMessage()).build();
+				.setMessageByErrorCode(ErrorCode.Exception.Resource.NotFound.VALUE).setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.NOT_FOUND)
-				.setDebugMessage(ex).build();
+				.setMessageByErrorCode(ErrorCode.Exception.Resource.NotFound.VALUE).setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
 
 	@ExceptionHandler(NoSuchElementException.class)
 	protected ResponseEntity<Object> handleNoSuchElement(NoSuchElementException ex) {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.NOT_FOUND)
-				.setMessage(ex.getMessage()).build();
+				.setMessageByErrorCode(ErrorCode.Exception.Resource.NotFound.VALUE).setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex,
 			WebRequest request) {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		if (ex.getCause() instanceof ConstraintViolationException) {
 			ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.BAD_REQUEST)
-					.setMessage("Operation cannot be performed. Integrity Constraint violated")
+					.setMessageByErrorCode(ErrorCode.Exception.DataIntegrityViolation.CONSTRAINT_VIOLATION)
 					.setDebugMessage(ex.getCause()).build();
 			return buildResponseEntity(apiError);
 		}
 		if (ex.getCause() instanceof EntityExistsException) {
 			ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.CONFLICT)
-					.setMessage("Resource already exists").setDebugMessage(ex.getCause()).build();
+					.setMessageByErrorCode(ErrorCode.Exception.Resource.DuplicateFound.VALUE)
+					.setDebugMessage(ex.getCause()).build();
 			return buildResponseEntity(apiError);
 		}
-		log.error(ex);
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-				.setDebugMessage(ex).build();
+				.setMessageByErrorCode(ErrorCode.Exception.DataIntegrityViolation.VALUE).setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
 			WebRequest request) {
-		String message = String.format("The parameter '%s' of value '%s' could not be converted to type '%s'",
-				ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.BAD_REQUEST)
-				.setMessage(message).setDebugMessage(ex).build();
+				.setMessageByErrorCode(ErrorCode.Exception.MethodArgumentTypeMismatch.VALUE, ex.getName(),
+						ex.getValue(), ex.getRequiredType().getSimpleName())
+				.setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request)
 			throws ClassNotFoundException {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.BAD_REQUEST)
 				.setDebugMessage(ex).build();
 		String message = ex.getMessage();
 		if (message.contains("enum")) {
 			String enumClassName = message.substring(message.lastIndexOf(' '), message.lastIndexOf('.')).trim();
-			this.apiErrorMapper
-					.setMessage(String.format("Enum value must be: %s", EnumUtils.getNames(enumClassName).toString()));
+			this.apiErrorMapper.setMessageByErrorCode(ErrorCode.Exception.IllegalArgument.ENUM,
+					EnumUtils.getNames(enumClassName).toString());
+		} else {
+			this.apiErrorMapper.setMessageByErrorCode(ErrorCode.Exception.IllegalArgument.VALUE);
 		}
+		return buildResponseEntity(apiError);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(AccessDeniedException ex, WebRequest request) {
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
+		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.FORBIDDEN)
+				.setMessageByErrorCode(ErrorCode.Exception.AccessDenied.VALUE).setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
 
 	@ExceptionHandler(ParentDeletionException.class)
 	protected ResponseEntity<Object> handleParentDeletionException(ParentDeletionException ex) {
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.BAD_REQUEST)
-				.setMessage(ex.getMessage()).build();
+				.setMessageByErrorCode(ErrorCode.Exception.Resource.PARENT_DELETION).setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
 
 	@ExceptionHandler(ResourceListNotFoundException.class)
 	protected ResponseEntity<Object> handleResourceListNotFoundException(ResourceListNotFoundException ex) {
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.NOT_FOUND)
-				.setMessage(ex.getMessage()).build();
+				.setMessageByErrorCode(ErrorCode.Exception.Resource.List.NOT_FOUND).setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
 
-	@ExceptionHandler({DuplicateResourceFoundException.class, RequestResourceMismatchException.class})
-	protected ResponseEntity<Object> handleConflictTypedException(RuntimeException ex) {
+	@ExceptionHandler(RequestResourceMismatchException.class)
+	protected ResponseEntity<Object> handleConflictTypedException(RequestResourceMismatchException ex) {
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.CONFLICT)
-				.setMessage(ex.getMessage()).build();
+				.setMessageByErrorCode(ErrorCode.Exception.Resource.RequestMismatch.VALUE).setDebugMessage(ex).build();
 		return buildResponseEntity(apiError);
 	}
-	
+
 	@ExceptionHandler(value = { Exception.class })
 	protected ResponseEntity<Object> handleException(RuntimeException ex, WebRequest request) {
-		log.error(ex);
-		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.BAD_REQUEST)
-				.setDebugMessage(ex).setMessage("ExceptionHandler is not defined for: " + ex.getClass()).build();
+		log.error(ex.getClass().getSimpleName() + " - ", ex);
+		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+				.setMessageByErrorCode(ErrorCode.Exception.VALUE, ex.getClass().getSimpleName()).setDebugMessage(ex)
+				.build();
 		return buildResponseEntity(apiError);
 	}
 

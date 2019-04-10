@@ -1,7 +1,5 @@
 package com.asraf.dtos.response.requestdto;
 
-import java.net.URI;
-
 import org.springframework.http.HttpMethod;
 
 import com.asraf.dtos.request.BaseRequestDto;
@@ -21,7 +19,7 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 public class RequestDataResponseDto extends BaseResponseDto {
 
-	private URI uri;
+	private String uri;
 	private HttpMethod method;
 	private RequestBodyResponseDto<? extends BaseRequestDto> body;
 

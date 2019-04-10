@@ -17,20 +17,25 @@ import org.springframework.validation.ObjectError;
 import com.asraf.dtos.mapper.errors.ApiValidationErrorMapper;
 import com.asraf.dtos.mapper.persistence.DtoMapperImpl;
 import com.asraf.dtos.response.errors.ApiValidationErrorResponseDto;
+import com.asraf.services.MessageSourceService;
 
 @Component
 @Scope(value = "prototype")
 public class ApiValidationErrorMapperImpl extends DtoMapperImpl implements ApiValidationErrorMapper {
 
+	private final MessageSourceService messageSourceService;
+
 	@Autowired
-	protected ApiValidationErrorMapperImpl(ModelMapper modelMapper) {
+	protected ApiValidationErrorMapperImpl(ModelMapper modelMapper, MessageSourceService messageSourceService) {
 		super(modelMapper);
+		this.messageSourceService = messageSourceService;
 	}
 
 	public ApiValidationErrorResponseDto getApiValidationError(ConstraintViolation<?> constraintViolation) {
 		return new ApiValidationErrorResponseDto(constraintViolation.getRootBeanClass().getSimpleName(),
 				((PathImpl) constraintViolation.getPropertyPath()).getLeafNode().asString(),
-				constraintViolation.getInvalidValue(), constraintViolation.getMessage());
+				constraintViolation.getInvalidValue(), constraintViolation.getMessage(),
+				messageSourceService.getMessage(constraintViolation.getMessage()));
 	}
 
 	public List<ApiValidationErrorResponseDto> getApiValidationErrors(
@@ -45,11 +50,13 @@ public class ApiValidationErrorMapperImpl extends DtoMapperImpl implements ApiVa
 
 	public ApiValidationErrorResponseDto getApiValidationError(FieldError fieldError) {
 		return new ApiValidationErrorResponseDto(fieldError.getObjectName(), fieldError.getField(),
-				fieldError.getRejectedValue(), fieldError.getDefaultMessage());
+				fieldError.getRejectedValue(), fieldError.getDefaultMessage(),
+				messageSourceService.getMessage(fieldError.getDefaultMessage()));
 	}
 
 	public ApiValidationErrorResponseDto getApiValidationError(ObjectError objectError) {
-		return new ApiValidationErrorResponseDto(objectError.getObjectName(), objectError.getDefaultMessage());
+		return new ApiValidationErrorResponseDto(objectError.getObjectName(), objectError.getDefaultMessage(),
+				messageSourceService.getMessage(objectError.getDefaultMessage()));
 	}
 
 }

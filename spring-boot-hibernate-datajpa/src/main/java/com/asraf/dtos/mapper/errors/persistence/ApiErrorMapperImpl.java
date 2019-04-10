@@ -13,12 +13,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+import com.asraf.constants.ErrorCode;
 import com.asraf.dtos.mapper.errors.ApiErrorMapper;
 import com.asraf.dtos.mapper.errors.ApiValidationErrorMapper;
 import com.asraf.dtos.mapper.errors.CsvValidationErrorMapper;
 import com.asraf.dtos.mapper.persistence.DtoMapperImpl;
 import com.asraf.dtos.response.errors.ApiErrorResponseDto;
 import com.asraf.dtos.response.errors.CsvValidationErrorResponseDto;
+import com.asraf.services.MessageSourceService;
 
 @Component
 @Scope(value = "prototype")
@@ -28,37 +30,47 @@ public class ApiErrorMapperImpl extends DtoMapperImpl implements ApiErrorMapper 
 
 	private final ApiValidationErrorMapper apiValidationErrorMapper;
 	private final CsvValidationErrorMapper csvValidationErrorMapper;
+	private final MessageSourceService messageSourceService;
 
 	@Autowired
 	protected ApiErrorMapperImpl(ModelMapper modelMapper, ApiValidationErrorMapper apiValidationErrorMapper,
-			CsvValidationErrorMapper csvValidationErrorMapper) {
+			MessageSourceService messageSourceService, CsvValidationErrorMapper csvValidationErrorMapper) {
 		super(modelMapper);
 		this.apiValidationErrorMapper = apiValidationErrorMapper;
 		this.csvValidationErrorMapper = csvValidationErrorMapper;
+		this.messageSourceService = messageSourceService;
 	}
 
-	public ApiErrorMapperImpl initDefaultValidationError() {
+	public ApiErrorMapper initDefaultValidationError() {
 		this.apiErrorResponseDto.setStatus(HttpStatus.BAD_REQUEST);
-		this.apiErrorResponseDto.setMessage("Validation error");
+		this.apiErrorResponseDto.setErrorCode(ErrorCode.Validation.ERROR);
+		this.apiErrorResponseDto.setMessage(messageSourceService.getMessage(ErrorCode.Validation.ERROR));
 		return this;
 	}
 
-	public ApiErrorMapperImpl setStatus(HttpStatus status) {
+	public ApiErrorMapper setStatus(HttpStatus status) {
 		this.apiErrorResponseDto.setStatus(status);
 		return this;
 	}
 
-	public ApiErrorMapperImpl setMessage(String message) {
-		this.apiErrorResponseDto.setMessage(message);
+	public ApiErrorMapper setMessageByErrorCode(String errorCode) {
+		this.apiErrorResponseDto.setErrorCode(errorCode);
+		this.apiErrorResponseDto.setMessage(messageSourceService.getMessage(errorCode));
 		return this;
 	}
 
-	public ApiErrorMapperImpl setDebugMessage(Throwable exception) {
+	public ApiErrorMapper setMessageByErrorCode(String errorCode, Object... params) {
+		this.apiErrorResponseDto.setErrorCode(errorCode);
+		this.apiErrorResponseDto.setMessage(String.format(messageSourceService.getMessage(errorCode), params));
+		return this;
+	}
+
+	public ApiErrorMapper setDebugMessage(Throwable exception) {
 		this.apiErrorResponseDto.setDebugMessage(exception.getLocalizedMessage());
 		return this;
 	}
 
-	public ApiErrorMapperImpl addValidationFieldErrors(List<FieldError> fieldErrors) {
+	public ApiErrorMapper addValidationFieldErrors(List<FieldError> fieldErrors) {
 		fieldErrors.forEach(this::addValidationError);
 		return this;
 	}

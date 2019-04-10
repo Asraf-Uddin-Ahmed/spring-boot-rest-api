@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpMethod;
 
 import com.asraf.dtos.request.BaseRequestDto;
@@ -31,7 +32,15 @@ public class RequestDataCollectionResponseDto extends BaseResponseDto {
 
 	public RequestDataCollectionResponseDto addRequest(URI uri, HttpMethod method,
 			RequestBodyResponseDto<? extends BaseRequestDto> requestBody) {
-		this.requests.add(RequestDataResponseDto.builder().uri(uri).method(method).body(requestBody).build());
+		this.requests
+				.add(RequestDataResponseDto.builder().uri(uri.toString()).method(method).body(requestBody).build());
+		return this;
+	}
+
+	public RequestDataCollectionResponseDto addRequest(ControllerLinkBuilder uri, HttpMethod method,
+			RequestBodyResponseDto<? extends BaseRequestDto> requestBody) {
+		this.requests
+				.add(RequestDataResponseDto.builder().uri(uri.toString()).method(method).body(requestBody).build());
 		return this;
 	}
 

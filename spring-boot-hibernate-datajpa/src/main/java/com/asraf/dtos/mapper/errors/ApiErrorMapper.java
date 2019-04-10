@@ -9,18 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
-import com.asraf.dtos.mapper.errors.persistence.ApiErrorMapperImpl;
 import com.asraf.dtos.response.errors.ApiErrorResponseDto;
 
 public interface ApiErrorMapper {
 
-	ApiErrorMapperImpl initDefaultValidationError();
+	ApiErrorMapper initDefaultValidationError();
 
-	ApiErrorMapperImpl setStatus(HttpStatus status);
+	ApiErrorMapper setStatus(HttpStatus status);
 
-	ApiErrorMapperImpl setMessage(String message);
+	ApiErrorMapper setMessageByErrorCode(String message);
 
-	ApiErrorMapperImpl setDebugMessage(Throwable exception);
+	ApiErrorMapper setMessageByErrorCode(String errorCode, Object... params);
+
+	ApiErrorMapper setDebugMessage(Throwable exception);
 
 	ApiErrorMapper addValidationFieldErrors(List<FieldError> fieldErrors);
 
