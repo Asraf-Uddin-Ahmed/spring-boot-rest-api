@@ -1,7 +1,10 @@
 package com.asraf.controllers;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ import com.asraf.models.pathvariable.ColumnPathvariable;
 import com.asraf.models.search.UserSearch;
 import com.asraf.models.search.extended.UserWithVerificationSearch;
 import com.asraf.services.UserService;
+import com.asraf.services.email.EmailMessageBuilder;
+import com.asraf.services.email.EmailSenderService;
+import com.asraf.templates.HelloUserTemplate;
 
 @RestController
 @RequestMapping("/users")
@@ -33,11 +39,16 @@ public class UserController {
 
 	private UserService userService;
 	private UserMapper userMappper;
+	private EmailSenderService emailSenderService;
+	private HelloUserTemplate helloUserTemplate;
 
 	@Autowired
-	public UserController(UserService userService, UserMapper userMappper) {
+	public UserController(UserService userService, UserMapper userMappper, EmailSenderService emailSenderService,
+			HelloUserTemplate helloUserTemplate) {
 		this.userMappper = userMappper;
 		this.userService = userService;
+		this.emailSenderService = emailSenderService;
+		this.helloUserTemplate = helloUserTemplate;
 	}
 
 	@GetMapping("")
@@ -128,6 +139,19 @@ public class UserController {
 	public Page<Object> getByDistinctColumn(ColumnPathvariable columnPathvariable, Pageable pageable) {
 		return userService.getByDistinctColumn(columnPathvariable.getColumnName(),
 				columnPathvariable.getColumnTypeEnum(), pageable);
+	}
+
+	@PostMapping("/send-email")
+	public void sendEmail(@RequestBody @Valid UserRequestDto requestDto)
+			throws MessagingException, UnsupportedEncodingException {
+		InternetAddress replyTo = new InternetAddress("noreply@auth.com", "no-reply");
+		String subject = "Hello " + requestDto.getName();
+		String body = helloUserTemplate.createTemplate(requestDto.getName());
+		EmailMessageBuilder emailMessageBuilder = EmailMessageBuilder.builder().emailSubject(subject).emailBody(body)
+				.isHtml(true).emailReplyTo(replyTo).emailFrom(null).build()
+				.addEmailTo(requestDto.getEmail(), requestDto.getName()).buildMail(emailSenderService.getMimeMessage());
+		helloUserTemplate.loadInlineImages(emailMessageBuilder);
+		emailSenderService.send();
 	}
 
 }
