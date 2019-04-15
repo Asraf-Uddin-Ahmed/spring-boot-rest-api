@@ -129,8 +129,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ResourceNotFoundException.class)
 	protected ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
 		log.error(ex.getClass().getSimpleName() + " - ", ex);
+		System.out.println("################################");
 		ApiErrorResponseDto apiError = this.apiErrorMapper.initResponseDto().setStatus(HttpStatus.NOT_FOUND)
 				.setMessageByErrorCode(ErrorCode.Exception.Resource.NotFound.VALUE).setDebugMessage(ex).build();
+		System.out.println(apiError.toString());
 		return buildResponseEntity(apiError);
 	}
 

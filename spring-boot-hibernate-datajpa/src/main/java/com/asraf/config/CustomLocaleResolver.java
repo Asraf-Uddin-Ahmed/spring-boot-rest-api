@@ -1,4 +1,4 @@
-package com.asraf;
+package com.asraf.config;
 
 import java.util.Arrays;
 import java.util.List;

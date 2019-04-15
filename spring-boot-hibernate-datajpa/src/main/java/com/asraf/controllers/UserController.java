@@ -46,7 +46,7 @@ public class UserController {
 		return response;
 	}
 
-	@GetMapping("/get-by-email/{email}")
+	@GetMapping("/get-by-email/{email:.+}")
 	public UserResponseDto getByEmail(@PathVariable String email) {
 		User user = userService.getByEmail(email);
 		return userMappper.getResponseDto(user);
