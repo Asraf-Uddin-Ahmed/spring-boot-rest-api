@@ -9,7 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthProperties {
+	private String checkTokenEndpoint;
+	private String clientId;
+	private String clientSecret;
 	private Swagger swagger = new Swagger();
+	private Jdbc jdbc = new Jdbc();
 
 	@Getter
 	@Setter
@@ -19,4 +23,13 @@ public class AuthProperties {
 		private String clientSecret;
 	}
 
+	@Getter
+	@Setter
+	public class Jdbc {
+		private String driverClassName;
+		private String url;
+		private String username;
+		private String password;
+	}
+	
 }

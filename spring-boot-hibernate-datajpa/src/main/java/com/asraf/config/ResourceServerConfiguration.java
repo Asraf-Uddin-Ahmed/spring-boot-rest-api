@@ -18,11 +18,14 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import com.asraf.constants.ScopeTypes;
+import com.asraf.properties.AuthProperties;
 
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
-
+	@Autowired
+    private AuthProperties authProperties;
+    
 	private static final String RESOURCE_ID = null;
     private static final String SECURED_PATTERN = "/**";
 
@@ -42,23 +45,17 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     }
     
     /* For resource server configuration with auth server */
-//    @Autowired
-//	private Environment env;
-//	
 //    @Primary
 //	@Bean
 //	public RemoteTokenServices tokenServices() {
 //		final RemoteTokenServices tokenService = new RemoteTokenServices();
-//		tokenService.setCheckTokenEndpointUrl(env.getProperty("auth.endpoint.check-token"));
-//		tokenService.setClientId(env.getProperty("auth.client-id"));
-//		tokenService.setClientSecret(env.getProperty("auth.client-secret"));
+//		tokenService.setCheckTokenEndpointUrl(authProperties.getCheckTokenEndpoint());
+//		tokenService.setClientId(authProperties.getClientId());
+//		tokenService.setClientSecret(authProperties.getClientSecret());
 //		return tokenService;
 //	}
     
     /* For resource server configuration without auth server */
-    @Autowired
-    private Environment env;
-    
     @Bean
     @Primary
     public DefaultTokenServices tokenServices() {
@@ -72,10 +69,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Bean
     public DataSource authDataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("auth.jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("auth.jdbc.url"));
-        dataSource.setUsername(env.getProperty("auth.jdbc.username"));
-        dataSource.setPassword(env.getProperty("auth.jdbc.password"));
+        dataSource.setDriverClassName(authProperties.getJdbc().getDriverClassName());
+        dataSource.setUrl(authProperties.getJdbc().getUrl());
+        dataSource.setUsername(authProperties.getJdbc().getUsername());
+        dataSource.setPassword(authProperties.getJdbc().getPassword());
         return dataSource;
     }
 
