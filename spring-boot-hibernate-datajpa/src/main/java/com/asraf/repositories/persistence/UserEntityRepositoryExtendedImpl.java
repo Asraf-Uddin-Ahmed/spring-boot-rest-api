@@ -17,24 +17,24 @@ import com.asraf.entities.QUserEntity;
 import com.asraf.entities.QUserVerification;
 import com.asraf.entities.UserEntity;
 import com.asraf.models.search.extended.UserWithVerificationSearch;
-import com.asraf.repositories.UserRepositoryExtended;
-import com.asraf.repositories.UserRepositoryQdsl;
+import com.asraf.repositories.UserEntityRepositoryExtended;
+import com.asraf.repositories.UserEntityRepositoryQdsl;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 
 @Repository
-public class UserRepositoryExtendedImpl implements UserRepositoryExtended {
+public class UserEntityRepositoryExtendedImpl implements UserEntityRepositoryExtended {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private UserRepositoryQdsl userRepositoryQdsl;
+	private UserEntityRepositoryQdsl userEntityRepositoryQdsl;
 
 	@Autowired
-	public UserRepositoryExtendedImpl(EntityManager entityManager, UserRepositoryQdsl userRepositoryQdsl) {
+	public UserEntityRepositoryExtendedImpl(EntityManager entityManager, UserEntityRepositoryQdsl userEntityRepositoryQdsl) {
 		this.entityManager = entityManager;
-		this.userRepositoryQdsl = userRepositoryQdsl;
+		this.userEntityRepositoryQdsl = userEntityRepositoryQdsl;
 	}
 
 	public Page<UserEntity> GetByUserWithVerificationSeach(UserWithVerificationSearch searchItem, Pageable pageable) {
@@ -55,7 +55,7 @@ public class UserRepositoryExtendedImpl implements UserRepositoryExtended {
 
 		query.from(qUserEntity).join(qUserEntity.userVerifications, qUserVerification).where(predicate).distinct();
 
-		return userRepositoryQdsl.findAll(query, pageable);
+		return userEntityRepositoryQdsl.findAll(query, pageable);
 	}
 
 	public List<UserEntity> getByName(UserWithVerificationSearch searchItem) {
@@ -65,7 +65,7 @@ public class UserRepositoryExtendedImpl implements UserRepositoryExtended {
 	}
 
 	public Page<Object> getByDistinctColumn(String columnName, ColumnType columnType, Pageable pageable) {
-		return userRepositoryQdsl.getListOfDistinctColumn(columnName, columnType, pageable);
+		return userEntityRepositoryQdsl.getListOfDistinctColumn(columnName, columnType, pageable);
 	}
 
 }

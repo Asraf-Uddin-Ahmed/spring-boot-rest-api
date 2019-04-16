@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.asraf.entities.UserEntity;
 
 @Transactional
-public interface UserRepositoryCrud extends PagingAndSortingRepository<UserEntity, Long> {
+public interface UserEntityRepositoryCrud extends PagingAndSortingRepository<UserEntity, Long> {
 
 	/**
 	 * Retrieves an user by its email.

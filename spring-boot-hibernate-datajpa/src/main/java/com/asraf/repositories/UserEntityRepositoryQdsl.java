@@ -5,6 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.asraf.entities.UserEntity;
 
 @Transactional
-public interface UserRepositoryQdsl extends ExtendedQueryDslJpaRepository<UserEntity, Long>  {
+public interface UserEntityRepositoryQdsl extends ExtendedQueryDslJpaRepository<UserEntity, Long>  {
 
 }

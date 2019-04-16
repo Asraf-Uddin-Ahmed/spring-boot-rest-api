@@ -11,7 +11,7 @@ import com.asraf.entities.UserEntity;
 import com.asraf.models.search.extended.UserWithVerificationSearch;
 
 @Transactional
-public interface UserRepositoryExtended {
+public interface UserEntityRepositoryExtended {
 
 	Page<UserEntity> GetByUserWithVerificationSeach(UserWithVerificationSearch searchItem, Pageable pageable);
 

@@ -14,7 +14,7 @@ import com.asraf.constants.ColumnType;
 import com.asraf.entities.UserEntity;
 import com.asraf.models.search.UserSearch;
 import com.asraf.models.search.extended.UserWithVerificationSearch;
-import com.asraf.repositories.UserRepository;
+import com.asraf.repositories.UserEntityRepository;
 import com.asraf.rsql.CustomRsqlVisitor;
 import com.asraf.services.UserService;
 import com.asraf.utils.ExceptionPreconditions;
@@ -27,67 +27,67 @@ import cz.jirutka.rsql.parser.ast.Node;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-	private UserRepository userRepository;
+	private UserEntityRepository userEntityRepository;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
+	public UserServiceImpl(UserEntityRepository userEntityRepository) {
+		this.userEntityRepository = userEntityRepository;
 	}
 
 	public UserEntity save(UserEntity user) {
-		return userRepository.save(user);
+		return userEntityRepository.save(user);
 	}
 
 	public void delete(UserEntity user) {
-		userRepository.delete(user);
+		userEntityRepository.delete(user);
 	}
 
 	public UserEntity getById(Long id) {
 		try {
-			return userRepository.findById(id).get();
+			return userEntityRepository.findById(id).get();
 		} catch (NoSuchElementException nseex) {
 			return ExceptionPreconditions.entityNotFound(UserEntity.class, "id", id.toString());
 		}
 	}
 
 	public Iterable<UserEntity> getAll() {
-		return userRepository.findAll();
+		return userEntityRepository.findAll();
 	}
 
 	public UserEntity getByEmail(String email) {
-		UserEntity user = userRepository.findByEmail(email);
+		UserEntity user = userEntityRepository.findByEmail(email);
 		ExceptionPreconditions.checkFound(user, UserEntity.class, "email", email.toString());
 		return user;
 	}
 
 	public List<UserEntity> getByNameContains(String name) {
-		return userRepository.findByNameContains(name);
+		return userEntityRepository.findByNameContains(name);
 	}
 
 	public List<UserEntity> getBySearchCrud(UserSearch searchItem) {
-		return userRepository.findByNameOrEmail(searchItem.getName(), searchItem.getEmail());
+		return userEntityRepository.findByNameOrEmail(searchItem.getName(), searchItem.getEmail());
 	}
 
 	public Page<UserEntity> getBySearchCrudPageable(UserSearch searchItem, Pageable pageable) {
-		return userRepository.findByNameContainsOrEmailContainsAllIgnoreCase(searchItem.getName(),
+		return userEntityRepository.findByNameContainsOrEmailContainsAllIgnoreCase(searchItem.getName(),
 				searchItem.getEmail(), pageable);
 	}
 
 	public Page<UserEntity> getBySearchIntoJoiningTablePageable(UserWithVerificationSearch searchItem, Pageable pageable) {
-		return userRepository.GetByUserWithVerificationSeach(searchItem, pageable);
+		return userEntityRepository.GetByUserWithVerificationSeach(searchItem, pageable);
 	}
 
 	public Page<UserEntity> getByQuery(String search, Pageable pageable) {
 		if (StringUtils.isNullOrEmpty(search))
-			return userRepository.findAll(pageable);
+			return userEntityRepository.findAll(pageable);
 		Node rootNode = new RSQLParser().parse(search);
 		Specification<UserEntity> spec = rootNode.accept(new CustomRsqlVisitor<UserEntity>());
-		Page<UserEntity> users = userRepository.findAll(spec, pageable);
+		Page<UserEntity> users = userEntityRepository.findAll(spec, pageable);
 		return users;
 	}
 
 	public Page<Object> getByDistinctColumn(String columnName, ColumnType columnType, Pageable pageable) {
-		return userRepository.getByDistinctColumn(columnName, columnType, pageable);
+		return userEntityRepository.getByDistinctColumn(columnName, columnType, pageable);
 	}
 
 }
