@@ -20,14 +20,14 @@ import org.hibernate.annotations.Parameter;
 public class UserProfile extends BaseEntity implements java.io.Serializable {
 
 	private long id;
-	private User user;
+	private UserEntity user;
 	private String address;
 	private String phoneNumber;
 
 	public UserProfile() {
 	}
 
-	public UserProfile(User user, String address, String phoneNumber) {
+	public UserProfile(UserEntity user, String address, String phoneNumber) {
 		this.user = user;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
@@ -48,11 +48,11 @@ public class UserProfile extends BaseEntity implements java.io.Serializable {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
-	public User getUser() {
+	public UserEntity getUser() {
 		return this.user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 

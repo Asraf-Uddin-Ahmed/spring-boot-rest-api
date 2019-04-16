@@ -9,7 +9,7 @@ import com.asraf.controllers.UserController;
 import com.asraf.controllers.UserVerificationController;
 import com.asraf.dtos.mapper.UserVerificationMapper;
 import com.asraf.dtos.response.entities.UserVerificationResponseDto;
-import com.asraf.entities.User;
+import com.asraf.entities.UserEntity;
 import com.asraf.entities.UserVerification;
 import com.asraf.resources.BaseResource;
 import com.asraf.resources.ExtendedLink;
@@ -26,7 +26,7 @@ public class UserVerificationResource extends BaseResource {
 
 		this.userVerification = userVerificationMapper.getResponseDto(userVerification);
 		final long id = userVerification.getId();
-		final User user = userVerification.getUser();
+		final UserEntity user = userVerification.getUser();
 
 		add(new ExtendedLink(linkTo(methodOn(UserVerificationController.class).getById(id)).withSelfRel())
 				.withMethod(HttpMethod.GET));

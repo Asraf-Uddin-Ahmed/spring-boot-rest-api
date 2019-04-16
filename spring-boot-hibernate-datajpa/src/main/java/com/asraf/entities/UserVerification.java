@@ -22,14 +22,14 @@ import javax.persistence.TemporalType;
 public class UserVerification extends BaseEntity implements java.io.Serializable {
 
 	private Long id;
-	private User user;
+	private UserEntity user;
 	private String verificationCode;
 	private Date creationTime;
 
 	public UserVerification() {
 	}
 
-	public UserVerification(User user, String verificationCode, Date creationTime) {
+	public UserVerification(UserEntity user, String verificationCode, Date creationTime) {
 		this.user = user;
 		this.verificationCode = verificationCode;
 		this.creationTime = creationTime;
@@ -49,11 +49,11 @@ public class UserVerification extends BaseEntity implements java.io.Serializable
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
-	public User getUser() {
+	public UserEntity getUser() {
 		return this.user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 

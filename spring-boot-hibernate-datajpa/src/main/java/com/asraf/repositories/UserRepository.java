@@ -4,9 +4,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.asraf.entities.User;
+import com.asraf.entities.UserEntity;
 
 @Transactional
-public interface UserRepository extends UserRepositoryCrud, JpaSpecificationExecutor<User>, UserRepositoryExtended {
+public interface UserRepository extends UserRepositoryCrud, JpaSpecificationExecutor<UserEntity>, UserRepositoryExtended {
 
 }

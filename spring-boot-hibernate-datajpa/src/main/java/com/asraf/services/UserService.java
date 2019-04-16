@@ -6,31 +6,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.asraf.constants.ColumnType;
-import com.asraf.entities.User;
+import com.asraf.entities.UserEntity;
 import com.asraf.models.search.UserSearch;
 import com.asraf.models.search.extended.UserWithVerificationSearch;
 
 public interface UserService {
 
-	User save(User user);
+	UserEntity save(UserEntity user);
 
-	void delete(User user);
+	void delete(UserEntity user);
 
-	User getById(Long id);
+	UserEntity getById(Long id);
 
-	Iterable<User> getAll();
+	Iterable<UserEntity> getAll();
 
-	User getByEmail(String email);
+	UserEntity getByEmail(String email);
 
-	List<User> getByNameContains(String name);
+	List<UserEntity> getByNameContains(String name);
 
-	List<User> getBySearchCrud(UserSearch searchItem);
+	List<UserEntity> getBySearchCrud(UserSearch searchItem);
 
-	Page<User> getBySearchCrudPageable(UserSearch searchItem, Pageable pageable);
+	Page<UserEntity> getBySearchCrudPageable(UserSearch searchItem, Pageable pageable);
 
-	Page<User> getBySearchIntoJoiningTablePageable(UserWithVerificationSearch searchItem, Pageable pageable);
+	Page<UserEntity> getBySearchIntoJoiningTablePageable(UserWithVerificationSearch searchItem, Pageable pageable);
 
-	Page<User> getByQuery(String search, Pageable pageable);
+	Page<UserEntity> getByQuery(String search, Pageable pageable);
 
 	Page<Object> getByDistinctColumn(String columnName, ColumnType columnType, Pageable pageable);
 

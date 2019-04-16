@@ -7,15 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.asraf.constants.ColumnType;
-import com.asraf.entities.User;
+import com.asraf.entities.UserEntity;
 import com.asraf.models.search.extended.UserWithVerificationSearch;
 
 @Transactional
 public interface UserRepositoryExtended {
 
-	Page<User> GetByUserWithVerificationSeach(UserWithVerificationSearch searchItem, Pageable pageable);
+	Page<UserEntity> GetByUserWithVerificationSeach(UserWithVerificationSearch searchItem, Pageable pageable);
 
-	List<User> getByName(UserWithVerificationSearch searchItem);
+	List<UserEntity> getByName(UserWithVerificationSearch searchItem);
 
 	Page<Object> getByDistinctColumn(String columnName, ColumnType columnType, Pageable pageable);
 

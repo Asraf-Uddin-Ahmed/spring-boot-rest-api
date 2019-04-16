@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.asraf.dtos.mapper.UserProfileMapper;
 import com.asraf.dtos.request.entities.UserProfileRequestDto;
 import com.asraf.dtos.response.entities.UserProfileResponseDto;
-import com.asraf.entities.User;
+import com.asraf.entities.UserEntity;
 import com.asraf.entities.UserProfile;
 
 @Component
@@ -32,7 +32,7 @@ public class UserProfileMapperImpl
 
 	}
 
-	public UserProfile getEntity(UserProfileRequestDto requestDto, User user) {
+	public UserProfile getEntity(UserProfileRequestDto requestDto, UserEntity user) {
 		UserProfile userProfile = super.getEntity(requestDto);
 		userProfile.setUser(user);
 		return userProfile;

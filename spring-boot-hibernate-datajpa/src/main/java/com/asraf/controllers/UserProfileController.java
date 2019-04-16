@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.asraf.dtos.mapper.UserProfileMapper;
 import com.asraf.dtos.request.entities.UserProfileRequestDto;
 import com.asraf.dtos.response.entities.UserProfileResponseDto;
-import com.asraf.entities.User;
+import com.asraf.entities.UserEntity;
 import com.asraf.entities.UserProfile;
 import com.asraf.services.UserProfileService;
 import com.asraf.services.UserService;
@@ -56,7 +56,7 @@ public class UserProfileController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public UserProfileResponseDto create(@PathVariable long userId,
 			@Valid @RequestBody UserProfileRequestDto requestDto) {
-		User user = this.userService.getById(userId);
+		UserEntity user = this.userService.getById(userId);
 		UserProfile userProfile = userProfileMappper.getEntity(requestDto, user);
 		userProfileService.save(userProfile);
 		return userProfileMappper.getResponseDto(userProfile);

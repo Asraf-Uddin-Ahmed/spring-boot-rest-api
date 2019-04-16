@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.asraf.entities.User;
+import com.asraf.entities.UserEntity;
 
 @Transactional
-public interface UserRepositoryCrud extends PagingAndSortingRepository<User, Long> {
+public interface UserRepositoryCrud extends PagingAndSortingRepository<UserEntity, Long> {
 
 	/**
 	 * Retrieves an user by its email.
@@ -19,15 +19,15 @@ public interface UserRepositoryCrud extends PagingAndSortingRepository<User, Lon
 	 * @param email
 	 * @return The user having the passed email or null if no user is found
 	 */
-	public User findByEmail(String email);
+	public UserEntity findByEmail(String email);
 
-	@Query("select u from User u where u.name like %?1% order by name")
-	List<User> findByNameContains(String name);
+//	@Query("select u from User u where u.name like %?1% order by name")
+	List<UserEntity> findByNameContains(String name);
 
-	List<User> findByNameOrEmail(String name, String email);
+	List<UserEntity> findByNameOrEmail(String name, String email);
 
 	// Slice<User> findAll(Pageable pageRequest);
-	Page<User> findByNameContainsOrEmailContainsAllIgnoreCase(String name, String email, Pageable pageRequest);
+	Page<UserEntity> findByNameContainsOrEmailContainsAllIgnoreCase(String name, String email, Pageable pageRequest);
 
 	// @Query("SELECT t FROM Todo t WHERE " + "LOWER(t.title) LIKE
 	// LOWER(CONCAT('%',:searchTerm, '%')) OR "

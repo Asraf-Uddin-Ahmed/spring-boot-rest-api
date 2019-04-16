@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.asraf.dtos.mapper.UserMapper;
 import com.asraf.dtos.request.entities.UserRequestDto;
 import com.asraf.dtos.response.entities.UserResponseDto;
-import com.asraf.entities.User;
+import com.asraf.entities.UserEntity;
 import com.asraf.models.pathvariable.ColumnPathvariable;
 import com.asraf.models.search.UserSearch;
 import com.asraf.models.search.extended.UserWithVerificationSearch;
@@ -59,19 +59,19 @@ public class UserController {
 
 	@GetMapping("/get-by-email/{email:.+}")
 	public UserResponseDto getByEmail(@PathVariable String email) {
-		User user = userService.getByEmail(email);
+		UserEntity user = userService.getByEmail(email);
 		return userMappper.getResponseDto(user);
 	}
 
 	@GetMapping("/get-by-name/{name}")
 	public List<UserResponseDto> getByName(@PathVariable String name) {
-		List<User> users = userService.getByNameContains(name);
+		List<UserEntity> users = userService.getByNameContains(name);
 		return userMappper.getResponseDtos(users);
 	}
 
 	@GetMapping("/search-crud")
 	public List<UserResponseDto> getBySearchCrud(UserSearch searchItem) {
-		List<User> users = userService.getBySearchCrud(searchItem);
+		List<UserEntity> users = userService.getBySearchCrud(searchItem);
 		return userMappper.getResponseDtos(users);
 	}
 
@@ -83,7 +83,7 @@ public class UserController {
 	 */
 	@GetMapping("/search-crud-pageable")
 	public Page<UserResponseDto> getBySearchCrudPageable(UserSearch searchItem, Pageable pageable) {
-		Page<User> pagedUser = userService.getBySearchCrudPageable(searchItem, pageable);
+		Page<UserEntity> pagedUser = userService.getBySearchCrudPageable(searchItem, pageable);
 		return userMappper.getResponseDtos(pagedUser);
 	}
 
@@ -95,7 +95,7 @@ public class UserController {
 	 */
 	@GetMapping("/search-join-pageable")
 	public Page<UserResponseDto> getBySearchJoinPageable(UserWithVerificationSearch searchItem, Pageable pageable) {
-		Page<User> pagedUser = this.userService.getBySearchIntoJoiningTablePageable(searchItem, pageable);
+		Page<UserEntity> pagedUser = this.userService.getBySearchIntoJoiningTablePageable(searchItem, pageable);
 		return userMappper.getResponseDtos(pagedUser);
 	}
 
@@ -107,21 +107,21 @@ public class UserController {
 	 */
 	@GetMapping("/query")
 	public Page<UserResponseDto> getByQuery(String search, Pageable pageable) {
-		Page<User> users = userService.getByQuery(search, pageable);
+		Page<UserEntity> users = userService.getByQuery(search, pageable);
 		return userMappper.getResponseDtos(users);
 	}
 
 	@PostMapping("")
 	@ResponseStatus(HttpStatus.CREATED)
 	public UserResponseDto create(@Valid @RequestBody UserRequestDto requestDto) {
-		User user = userMappper.getEntity(requestDto);
+		UserEntity user = userMappper.getEntity(requestDto);
 		userService.save(user);
 		return userMappper.getResponseDto(user);
 	}
 
 	@DeleteMapping("/{id}")
 	public UserResponseDto delete(@PathVariable long id) {
-		User user = userService.getById(id);
+		UserEntity user = userService.getById(id);
 		UserResponseDto response = userMappper.getResponseDto(user);
 		userService.delete(user);
 		return response;
@@ -129,7 +129,7 @@ public class UserController {
 
 	@PutMapping("/{id}")
 	public UserResponseDto update(@PathVariable long id, @Valid @RequestBody UserRequestDto requestDto) {
-		User user = userService.getById(id);
+		UserEntity user = userService.getById(id);
 		userMappper.loadEntity(requestDto, user);
 		userService.save(user);
 		return userMappper.getResponseDto(user);

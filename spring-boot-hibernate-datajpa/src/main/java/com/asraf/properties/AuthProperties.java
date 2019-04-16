@@ -9,12 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthProperties {
-	private String endpoint;
 	private Swagger swagger = new Swagger();
 
 	@Getter
 	@Setter
 	public class Swagger {
+		private String endpoint;
 		private String clientId;
 		private String clientSecret;
 	}

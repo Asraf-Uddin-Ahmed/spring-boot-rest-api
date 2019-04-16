@@ -44,7 +44,7 @@ public class SwaggerConfig implements WebMvcConfigurer  {
 	public SwaggerConfig(AuthProperties authProperties) {
 		CLIENT_ID = authProperties.getSwagger().getClientId();
 		CLIENT_SECRET = authProperties.getSwagger().getClientSecret();
-		AUTH_SERVER = authProperties.getEndpoint();
+		AUTH_SERVER = authProperties.getSwagger().getEndpoint();
 	}
 
 	@Override
