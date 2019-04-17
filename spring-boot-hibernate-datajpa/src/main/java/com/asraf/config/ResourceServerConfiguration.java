@@ -35,14 +35,15 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.requestMatchers().antMatchers(SECURED_PATTERN).and().authorizeRequests()
-				.antMatchers(HttpMethod.POST, SECURED_PATTERN).access(ScopeTypes.WRITE)
-				.antMatchers(HttpMethod.PUT, SECURED_PATTERN).access(ScopeTypes.WRITE)
-				.antMatchers(HttpMethod.DELETE, SECURED_PATTERN).access(ScopeTypes.DELETE)
-				.anyRequest()
-				.anonymous()
-				//.access(ScopeTypes.READ)
-				;
+		http.requestMatchers()
+			.antMatchers(SECURED_PATTERN).and().authorizeRequests()
+			// TODO: To enabling security, remove SECURED_PATTERN from below line
+			.antMatchers(SECURED_PATTERN, "/v2/api-docs", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
+			.antMatchers(HttpMethod.POST, SECURED_PATTERN).access(ScopeTypes.WRITE)
+			.antMatchers(HttpMethod.PUT, SECURED_PATTERN).access(ScopeTypes.WRITE)
+			.antMatchers(HttpMethod.DELETE, SECURED_PATTERN).access(ScopeTypes.DELETE)
+			.antMatchers(HttpMethod.GET, SECURED_PATTERN).access(ScopeTypes.READ)
+			;
 	}
 
 	/* For resource server configuration with auth server */
