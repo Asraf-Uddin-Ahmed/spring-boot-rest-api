@@ -24,13 +24,18 @@ import com.asraf.properties.AuthProperties;
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 	@Autowired
 	private AuthProperties authProperties;
-
+	@Autowired
+	private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+	
 	private static final String RESOURCE_ID = null;
 	private static final String SECURED_PATTERN = "/**";
 
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) {
-		resources.resourceId(RESOURCE_ID).tokenServices(tokenServices());
+		resources.resourceId(RESOURCE_ID)
+			.tokenServices(tokenServices())
+			.authenticationEntryPoint(restAuthenticationEntryPoint)
+			;
 	}
 
 	@Override
@@ -38,7 +43,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		http.requestMatchers()
 			.antMatchers(SECURED_PATTERN).and().authorizeRequests()
 			// TODO: To enabling security, remove SECURED_PATTERN from below line
-			.antMatchers(SECURED_PATTERN, "/v2/api-docs", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
+			.antMatchers(SECURED_PATTERN, "/", "/v2/api-docs", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
 			.antMatchers(HttpMethod.POST, SECURED_PATTERN).access(ScopeTypes.WRITE)
 			.antMatchers(HttpMethod.PUT, SECURED_PATTERN).access(ScopeTypes.WRITE)
 			.antMatchers(HttpMethod.DELETE, SECURED_PATTERN).access(ScopeTypes.DELETE)

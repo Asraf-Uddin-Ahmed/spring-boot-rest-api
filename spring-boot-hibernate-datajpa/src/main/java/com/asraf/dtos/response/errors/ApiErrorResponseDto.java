@@ -1,8 +1,8 @@
 package com.asraf.dtos.response.errors;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class ApiErrorResponseDto extends BaseResponseDto {
 
 	private HttpStatus status;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-	private LocalDateTime timestamp;
+	private Date timestamp;
 	private String errorCode;
 	private String message;
 	private String debugMessage;
@@ -36,7 +36,7 @@ public class ApiErrorResponseDto extends BaseResponseDto {
 
 	public ApiErrorResponseDto() {
 		this.subErrors = new ArrayList<>();
-		this.timestamp = LocalDateTime.now();
+		this.timestamp = new Date();
 	}
 
 	public boolean hasSubErrors() {
