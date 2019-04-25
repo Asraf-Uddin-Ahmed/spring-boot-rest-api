@@ -78,16 +78,22 @@ public class ExtendedLink extends Link {
 		return this;
 	}
 
+	public ExtendedLink withNullFormatAndFields() {
+		this.format = null;
+		this.fields = null;
+		return this;
+	}
+
 	private void initFormat() {
-		this.format = "format={hal_json | json | xml}";
+		this.format = "format={hal_json | json | xml}&fields={fields}";
 	}
 
 	private void initFields() {
-		this.fields = "fields={-}{* | property | property.* | property.childProperty | property.child* | property[childProperty1,childProperty2] | (property1,property2)[childProperty]}{,}";
+		this.fields = "fields={-}{* | ** | property | property.* | property.childProperty | property.child* | property[childProperty1,childProperty2] | (property1,property2)[childProperty]}{,}";
 	}
 
 	private void initFieldsForSearch() {
-		this.fields = "fields={-}{* | content | content.* | content.property | content.prop* | content.property.childProperty | content.property[childProperty1,childProperty2] | (content.property1,content.property2)[childProperty]}{,}";
+		this.fields = "fields={-}{* | ** | content | content.* | content.property | content.prop* | content.property.childProperty | content.property[childProperty1,childProperty2] | (content.property1,content.property2)[childProperty]}{,}";
 	}
 
 	@Data
