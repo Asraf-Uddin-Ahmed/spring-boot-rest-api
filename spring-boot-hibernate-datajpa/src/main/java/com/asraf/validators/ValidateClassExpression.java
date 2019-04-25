@@ -25,4 +25,10 @@ public @interface ValidateClassExpression {
 
 	String value();
 
+	String[] dependentFields() default {};
+
+	String[] appliedFields();
+
+	String actionMessage();
+
 }

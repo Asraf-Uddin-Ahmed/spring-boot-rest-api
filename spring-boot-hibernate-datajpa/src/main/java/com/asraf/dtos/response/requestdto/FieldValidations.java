@@ -1,16 +1,17 @@
 package com.asraf.dtos.response.requestdto;
 
+import java.util.List;
 import java.util.Map;
 
 import com.asraf.constants.UserRoleResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import lombok.Data;
 
 @Data
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 @JsonView(UserRoleResponse.Anonymous.class)
 public class FieldValidations {
 	private Boolean isRequired;
@@ -22,4 +23,5 @@ public class FieldValidations {
 	private Integer maxSize;
 	private String pattern;
 	private Map<String, Object> options;
+	private List<FieldConditionalValidation> fieldConditionalValidations;
 }

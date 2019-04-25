@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.constraints.Email;
@@ -20,6 +21,8 @@ import com.asraf.dtos.response.BaseResponseDto;
 import com.asraf.utils.EnumUtils;
 import com.asraf.validators.ContactNumberConstraint;
 import com.asraf.validators.EnumValueConstraint;
+import com.asraf.validators.ValidateClassExpression;
+import com.asraf.validators.ValidateClassExpressions;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -38,8 +41,9 @@ public class RequestBodyResponseDto<T extends BaseRequestDto> extends BaseRespon
 
 	public RequestBodyResponseDto(Class<T> clazzRequestDto) {
 		this.clazzRequestDto = clazzRequestDto;
+		List<Annotation> clazzAnnotations = Arrays.asList(this.clazzRequestDto.getAnnotations());
 		for (Field field : this.clazzRequestDto.getDeclaredFields()) {
-			fields.add(getRequestField(field));
+			fields.add(getRequestField(field, clazzAnnotations));
 		}
 	}
 
@@ -50,15 +54,16 @@ public class RequestBodyResponseDto<T extends BaseRequestDto> extends BaseRespon
 			if (clazzSuper == null) {
 				return this;
 			}
+			List<Annotation> clazzAnnotations = Arrays.asList(clazzSuper.getAnnotations());
 			for (Field field : clazzSuper.getDeclaredFields()) {
-				fields.add(getRequestField(field));
+				fields.add(getRequestField(field, clazzAnnotations));
 			}
 			clazzCurrent = clazzSuper;
 		}
 		return this;
 	}
 
-	private RequestField getRequestField(Field field) {
+	private RequestField getRequestField(Field field, List<Annotation> clazzAnnotations) {
 		FieldValidations validations = new FieldValidations();
 		Annotation[] annotations = field.getAnnotations();
 		for (Annotation annotation : annotations) {
@@ -82,6 +87,12 @@ public class RequestBodyResponseDto<T extends BaseRequestDto> extends BaseRespon
 				validations.setOptions(EnumUtils.getNameValues(enumClazz));
 			}
 		}
+		for (Annotation annotation : clazzAnnotations) {
+			if (annotation instanceof ValidateClassExpressions) {
+				ValidateClassExpression[] expressions = ((ValidateClassExpressions) annotation).value();
+				validations.setFieldConditionalValidations(this.getFieldConditionalValidations(field, expressions));
+			}
+		}
 		return RequestField.builder().name(field.getName()).type(field.getType().getSimpleName())
 				.parameterizedType(getParameterizedTypeName(field)).validations(validations).build();
 	}
@@ -94,5 +105,19 @@ public class RequestBodyResponseDto<T extends BaseRequestDto> extends BaseRespon
 		} catch (ClassCastException e) {
 			return null;
 		}
+	}
+
+	private List<FieldConditionalValidation> getFieldConditionalValidations(Field field,
+			ValidateClassExpression[] expressions) {
+		List<FieldConditionalValidation> fieldConditionalValidations = new ArrayList<>();
+		for (ValidateClassExpression expression : expressions) {
+			if (Arrays.stream(expression.appliedFields()).anyMatch(af -> af.equals(field.getName()))) {
+				String conditionMessage = expression.actionMessage().replace("{dependentFields}", "%s");
+				conditionMessage = String.format(conditionMessage, Arrays.asList(expression.dependentFields()));
+				fieldConditionalValidations.add(FieldConditionalValidation.builder().condition(conditionMessage)
+						.debugCondition(expression.value()).dependentFields(expression.dependentFields()).build());
+			}
+		}
+		return fieldConditionalValidations;
 	}
 }
