@@ -43,7 +43,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		http.requestMatchers()
 			.antMatchers(SECURED_PATTERN).and().authorizeRequests()
 			// TODO: To enabling security, remove SECURED_PATTERN from below line
-			.antMatchers(SECURED_PATTERN, "/", "/v2/api-docs", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
+			.antMatchers(SECURED_PATTERN, "/main/**", "/", "/requests", "/v2/api-docs", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
 			.antMatchers(HttpMethod.POST, SECURED_PATTERN).access(ScopeTypes.WRITE)
 			.antMatchers(HttpMethod.PUT, SECURED_PATTERN).access(ScopeTypes.WRITE)
 			.antMatchers(HttpMethod.DELETE, SECURED_PATTERN).access(ScopeTypes.DELETE)
