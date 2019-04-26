@@ -33,3 +33,5 @@ java -jar target/spring-boot-hibernate-datajpa.jar --spring.profiles.active=prod
 7. [Profile based development](https://www.youtube.com/watch?v=0zjQX7WwjrI&feature=youtu.be&list=PLGDwUiT1wr6-Fn3N2oqJpTdhGjFHnIIKY)
 8. [Spring security role based response shaping](https://stackoverflow.com/questions/17276081/spring-3-2-filtering-jackson-json-output-based-on-spring-security-role)
 9. [SpEL based validation](http://javatar81.blogspot.com/2016/06/hibernate-validator-spring-expression.html)
+10. [Spring Boot Server Sent Events](https://www.baeldung.com/spring-server-sent-events)
+11. [Server Sent Events with Scheduler](https://www.linkedin.com/pulse/server-sent-events-sse-spring-boot-aliaksandr-liakh)

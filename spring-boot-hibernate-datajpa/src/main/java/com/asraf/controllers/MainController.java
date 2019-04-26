@@ -54,7 +54,7 @@ public class MainController {
 	@GetMapping(path = "/main/stream-flux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public Flux<UserResponseDto> streamFlux() {
 		System.err.println("FLUX");
-		return Flux.interval(Duration.ofSeconds(1)).map(sequence -> {
+		return Flux.interval(Duration.ofSeconds(3)).map(sequence -> {
 			System.err.println("Flux - " + LocalTime.now().toString());
 			UserResponseDto response = new UserResponseDto();
 			response.setId(sequence);
