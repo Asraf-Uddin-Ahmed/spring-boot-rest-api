@@ -35,3 +35,4 @@ java -jar target/spring-boot-hibernate-datajpa.jar --spring.profiles.active=prod
 9. [SpEL based validation](http://javatar81.blogspot.com/2016/06/hibernate-validator-spring-expression.html)
 10. [Spring Boot Server Sent Events](https://www.baeldung.com/spring-server-sent-events)
 11. [Server Sent Events with Scheduler](https://www.linkedin.com/pulse/server-sent-events-sse-spring-boot-aliaksandr-liakh)
+12. [Media type based REST API versioning](https://www.baeldung.com/spring-rest-custom-media-type)

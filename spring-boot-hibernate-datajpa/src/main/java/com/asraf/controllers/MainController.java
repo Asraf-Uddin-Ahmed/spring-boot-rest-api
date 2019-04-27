@@ -31,9 +31,20 @@ public class MainController {
 		return new MainResource();
 	}
 
-	@GetMapping("/main/{id}")
-	public String getById(@PathVariable("id") String id) {
-		return "getById -> " + id;
+	@GetMapping(value = "/main/{id}", produces = { "application/asraf.v1+json", "application/asraf.v1+xml" })
+	public UserResponseDto getById(@PathVariable("id") long id) {
+		UserResponseDto response = new UserResponseDto();
+		response.setId(id);
+		response.setName("getById Version #1");
+		return response;
+	}
+
+	@GetMapping(value = "/main/{id}", produces = { "application/asraf.v2+json", "application/asraf.v2+xml" })
+	public UserResponseDto getByIdV2(@PathVariable("id") long id) {
+		UserResponseDto response = new UserResponseDto();
+		response.setId(id);
+		response.setName("getById Version #2");
+		return response;
 	}
 
 	@PostMapping("/main")
