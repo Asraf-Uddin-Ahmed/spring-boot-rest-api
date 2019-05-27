@@ -38,8 +38,13 @@ public class ResponseBodyModifierAdvice implements ResponseBodyAdvice<Object> {
 		// response.getHeaders().add("dummy-header", "dummy-value");
 
 		String fields = ((ServletServerHttpRequest) request).getServletRequest().getParameter("fields");
+		String format = ((ServletServerHttpRequest) request).getServletRequest().getParameter("format");
 		if (StringUtils.isNullOrWhitespace(fields)) {
-			return body;
+			if (StringUtils.isNullOrWhitespace(format)) {
+				return body;
+			} else {
+				fields = "*";
+			}
 		}
 
 		ObjectMapper objectMapper = Squiggly.init(new ObjectMapper(), fields);

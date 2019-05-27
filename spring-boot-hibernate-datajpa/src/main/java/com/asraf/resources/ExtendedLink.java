@@ -85,7 +85,7 @@ public class ExtendedLink extends Link {
 	}
 
 	private void initFormat() {
-		this.format = "format={hal_json | json | xml}&fields={fields}";
+		this.format = "format={hal_json | json | xml}";
 	}
 
 	private void initFields() {
