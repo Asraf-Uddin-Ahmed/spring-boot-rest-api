@@ -9,6 +9,7 @@
         <property name="hibernate.connection.password">1111</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
-        <property name="hibernate.default_catalog">mytestdb</property>
+        <!-- This is removing @GeneratedValue annotation from entity -->
+        <!-- <property name="hibernate.default_catalog">mytestdb</property> -->
     </session-factory>
 </hibernate-configuration>
