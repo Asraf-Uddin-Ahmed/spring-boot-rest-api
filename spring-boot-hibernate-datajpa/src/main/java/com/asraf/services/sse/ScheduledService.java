@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.asraf.dtos.response.entities.UserResponseDto;
+import com.asraf.dtos.response.entities.StudentResponseDto;
 
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
@@ -13,13 +13,13 @@ import reactor.core.publisher.Flux;
 @Component
 public class ScheduledService {
 
-	private final EmitterProcessor<UserResponseDto> emitter;
+	private final EmitterProcessor<StudentResponseDto> emitter;
 
 	public ScheduledService() {
 		emitter = EmitterProcessor.create();
 	}
 
-	public Flux<UserResponseDto> getInfiniteUserResponseDtos() {
+	public Flux<StudentResponseDto> getInfiniteUserResponseDtos() {
 		return emitter.log();
 	}
 
@@ -27,7 +27,7 @@ public class ScheduledService {
 	void timerHandler() {
 		System.err.println("SSE scheduler - " + LocalTime.now().toString());
 		try {
-			UserResponseDto response = new UserResponseDto();
+			StudentResponseDto response = new StudentResponseDto();
 			response.setName("ব্যবহারকারীর");
 			emitter.onNext(response);
 		} catch (Exception e) {

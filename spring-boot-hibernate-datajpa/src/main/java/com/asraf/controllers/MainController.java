@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.asraf.dtos.response.entities.UserResponseDto;
+import com.asraf.dtos.response.entities.StudentResponseDto;
 import com.asraf.resources.main.MainResource;
 import com.asraf.services.sse.ScheduledService;
 
@@ -32,16 +32,16 @@ public class MainController {
 	}
 
 	@GetMapping(value = "/main/{id}", produces = { "application/asraf.v1+json", "application/asraf.v1+xml" })
-	public UserResponseDto getById(@PathVariable("id") long id) {
-		UserResponseDto response = new UserResponseDto();
+	public StudentResponseDto getById(@PathVariable("id") long id) {
+		StudentResponseDto response = new StudentResponseDto();
 		response.setId(id);
 		response.setName("getById Version #1");
 		return response;
 	}
 
 	@GetMapping(value = "/main/{id}", produces = { "application/asraf.v2+json", "application/asraf.v2+xml" })
-	public UserResponseDto getByIdV2(@PathVariable("id") long id) {
-		UserResponseDto response = new UserResponseDto();
+	public StudentResponseDto getByIdV2(@PathVariable("id") long id) {
+		StudentResponseDto response = new StudentResponseDto();
 		response.setId(id);
 		response.setName("getById Version #2");
 		return response;
@@ -63,11 +63,11 @@ public class MainController {
 	}
 
 	@GetMapping(path = "/main/stream-flux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	public Flux<UserResponseDto> streamFlux() {
+	public Flux<StudentResponseDto> streamFlux() {
 		System.err.println("FLUX");
 		return Flux.interval(Duration.ofSeconds(3)).map(sequence -> {
 			System.err.println("Flux - " + LocalTime.now().toString());
-			UserResponseDto response = new UserResponseDto();
+			StudentResponseDto response = new StudentResponseDto();
 			response.setId(sequence);
 			response.setName("ব্যবহারকারীর");
 			return response;
@@ -75,7 +75,7 @@ public class MainController {
 	}
 
 	@GetMapping(value = "/main/stream-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	public Flux<UserResponseDto> streamEvents() {
+	public Flux<StudentResponseDto> streamEvents() {
 		System.err.println("SSE");
 		return scheduledService.getInfiniteUserResponseDtos();
 	}

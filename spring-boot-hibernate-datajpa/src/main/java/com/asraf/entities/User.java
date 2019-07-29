@@ -35,7 +35,6 @@ public class User extends BaseEntity implements java.io.Serializable {
 	private Date lastWrongPasswordAttempt;
 	private Date creationTime;
 	private Date updateTime;
-	private Set<UserVerification> userVerifications = new HashSet<UserVerification>(0);
 	private Set<UserClaim> userClaims = new HashSet<UserClaim>(0);
 	private Set<Role> roles = new HashSet<Role>(0);
 
@@ -53,7 +52,7 @@ public class User extends BaseEntity implements java.io.Serializable {
 
 	public User(String username, String email, String password, String userStatus, Date lastLogin,
 			Integer wrongPasswordAttempt, Date lastWrongPasswordAttempt, Date creationTime, Date updateTime,
-			Set<UserVerification> userVerifications, Set<UserClaim> userClaims, Set<Role> roles) {
+			Set<UserClaim> userClaims, Set<Role> roles) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -63,7 +62,6 @@ public class User extends BaseEntity implements java.io.Serializable {
 		this.lastWrongPasswordAttempt = lastWrongPasswordAttempt;
 		this.creationTime = creationTime;
 		this.updateTime = updateTime;
-		this.userVerifications = userVerifications;
 		this.userClaims = userClaims;
 		this.roles = roles;
 	}
@@ -163,15 +161,6 @@ public class User extends BaseEntity implements java.io.Serializable {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	public Set<UserVerification> getUserVerifications() {
-		return this.userVerifications;
-	}
-
-	public void setUserVerifications(Set<UserVerification> userVerifications) {
-		this.userVerifications = userVerifications;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
