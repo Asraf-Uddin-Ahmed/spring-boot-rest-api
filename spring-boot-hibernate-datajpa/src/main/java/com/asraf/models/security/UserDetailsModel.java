@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.asraf.entities.User;
+import com.asraf.entities_auth.User;
 
 public class UserDetailsModel implements UserDetails {
 
