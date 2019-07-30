@@ -1,5 +1,5 @@
 package com.asraf.entities;
-// Generated Sep 3, 2018 1:22:50 PM by Hibernate Tools 5.2.10.Final
+// Generated Jun 12, 2019 3:26:05 PM by Hibernate Tools 5.2.12.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -59,7 +59,7 @@ public class Role extends BaseEntity implements java.io.Serializable {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "user_role", catalog = "myauthdb", joinColumns = {
+	@JoinTable(name = "user_role", joinColumns = {
 			@JoinColumn(name = "role_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "user_id", nullable = false, updatable = false) })
 	public Set<User> getUsers() {

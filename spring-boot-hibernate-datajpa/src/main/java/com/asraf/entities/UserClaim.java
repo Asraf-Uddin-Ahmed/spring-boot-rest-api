@@ -1,9 +1,11 @@
 package com.asraf.entities;
-// Generated Sep 25, 2018 5:32:19 PM by Hibernate Tools 5.2.10.Final
+// Generated Jun 12, 2019 3:26:05 PM by Hibernate Tools 5.2.12.Final
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,7 +17,7 @@ import javax.persistence.Table;
 @Entity
 public class UserClaim extends BaseEntity implements java.io.Serializable {
 
-	private long id;
+	private Long id;
 	private User user;
 	private String claimType;
 	private String claimValue;
@@ -23,21 +25,21 @@ public class UserClaim extends BaseEntity implements java.io.Serializable {
 	public UserClaim() {
 	}
 
-	public UserClaim(long id, User user, String claimType, String claimValue) {
-		this.id = id;
+	public UserClaim(User user, String claimType, String claimValue) {
 		this.user = user;
 		this.claimType = claimType;
 		this.claimValue = claimValue;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
