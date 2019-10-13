@@ -1,9 +1,9 @@
 package com.asraf.constants;
 
-public interface UserRoleResponse {
+public class UserRoleResponse {
 
-	interface Anonymous {}
+	public interface Anonymous {}
 
-    interface Admin extends Anonymous {}
+    public interface Admin extends Anonymous {}
 
 }
