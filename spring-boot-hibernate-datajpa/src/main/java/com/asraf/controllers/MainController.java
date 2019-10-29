@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.asraf.aop.SecuredByRole;
+import com.asraf.constants.RoleAuthority;
 import com.asraf.dtos.response.entities.StudentResponseDto;
 import com.asraf.resources.main.MainResource;
 import com.asraf.services.sse.ScheduledService;
@@ -57,6 +60,7 @@ public class MainController {
 		return "update";
 	}
 
+	@SecuredByRole({RoleAuthority.ADMIN})
 	@DeleteMapping("/main/{id}")
 	public String delete(@PathVariable("id") String id) {
 		return "delete -> " + id;
