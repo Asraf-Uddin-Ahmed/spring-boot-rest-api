@@ -1,6 +1,5 @@
 package com.asraf.rsrc.controllers.advices;
 
-import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;
 
 import javax.persistence.EntityExistsException;
@@ -16,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
