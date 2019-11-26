@@ -178,6 +178,10 @@
 			<artifactId>sfm-csv</artifactId>
 			<version>3.19.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-csv</artifactId>
+		</dependency>
 
 		<!-- Filter out field from response -->
 		<dependency>
