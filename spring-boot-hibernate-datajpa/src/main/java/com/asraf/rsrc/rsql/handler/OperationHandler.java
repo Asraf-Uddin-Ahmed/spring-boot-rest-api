@@ -56,6 +56,8 @@ public abstract class OperationHandler<T> {
 				objArguments.add(Long.parseLong(argument));
 			} else if (type.equals(Date.class)) {
 				objArguments.add(DateUtils.parseGmtDateOrTime(argument));
+			} else if (type.isEnum()) {
+				objArguments.add(Enum.valueOf((Class<Enum>)type, argument));
 			} else {
 				objArguments.add(argument);
 			}
